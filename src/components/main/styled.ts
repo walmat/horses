@@ -28,6 +28,7 @@ export const ConnectButtonWrapper = styled.div`
     position: absolute;
     top: 0;
     right: 0;
+    z-index: 1000;
 `;
 
 export const SelectedImage = styled.img`
@@ -46,7 +47,7 @@ export const Pardner = styled.img`
     left: 60vw;
     bottom: -20px;
     min-width: 88px;
-    max-width: 48px;
+    width: 7.5vw;
     min-height: 48px;
 `;
 
@@ -97,7 +98,8 @@ export const SlingersContainer = styled.div`
     margin: 2rem;
     height: auto;
     justify-content: center;
-    max-height: 25vh;
+    max-height: 10vh;
+    min-height: 88px;
     overflow-y: auto;
 `;
 
@@ -105,7 +107,7 @@ export const FenceContainer = styled.div`
     position: absolute;
     width: 200vw;
     left: -50vw;
-    bottom: 33%;
+    bottom: 40%;
     display: flex;
     justify-content: center;
 `;
@@ -127,6 +129,7 @@ export const Slinger = styled.div`
     position: relative;
     justify-content: center;
     align-items: center;
+    z-index: 10;
 `;
 
 export const SelectedSlinger = styled.img`
@@ -156,58 +159,118 @@ export const SlingerImage = styled.img<{
         $isSelected || $isUsed ? 1 : 0.6};
 `;
 
-export const FooterContainer = styled.div`
-    display: flex;
-    min-width: 100%;
-    padding: 0 0 2rem 0;
-`;
-
-export const GateColumn = styled.div<{ flex?: number }>`
-    display: flex;
-    flex-direction: column;
-    min-width: 15%;
-    overflow: hidden;
-    flex: 0;
-    width: 0;
-    ${({ flex }) => flex && `flex: ${flex};`}
-
-    @media and (min-width: 600px) {
-        min-width: 20%;
-    }
-`;
-
-export const FooterColumn = styled.div<{ flex?: number }>`
-    display: flex;
-    flex-direction: column;
-    min-width: 15%;
-    overflow: hidden;
-    flex: 1 1 0;
-    width: 0;
-    ${({ flex }) => flex && `flex: ${flex};`}
-
-    @media and (min-width: 600px) {
-        min-width: 20%;
-    }
-`;
-
 export const HorsesLeft = styled.img`
+    position: absolute;
+    bottom: 7.5%;
+    left: -48px;
     max-width: 75%;
-    margin: auto auto 2rem -2rem;
+    max-height: 212px;
+    object-fit: contain;
+
+    @media (min-width: 480px) {
+        max-height: 244px;
+    }
+
+    @media (min-width: 768px) {
+        max-height: 322px;
+        left: 5%;
+    }
+
+    @media (min-width: 1024px) {
+        left: 15%;
+    }
+
+    @media (min-width: 1200px) {
+        left: 22.5%;
+    }
+`;
+
+export const HiddenHorseContainer = styled.div`
+    position: absolute;
+    left: 0;
+    bottom: 25%;
+    margin: 0 auto;
+    width: 100vw;
+    height: 100vh;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: flex-end;
 `;
 
 export const HiddenHorse = styled.img`
     max-width: 100%;
-    max-height: 144px;
-    padding: 5rem 0 3rem 0;
-    margin: 2rem;
+    height: 25vw;
+    max-height: 112px;
+
+    @media and (min-width: 480px) {
+        height: 20vw;
+    }
 `;
 
-export const HorsePlatform = styled.img`
-    max-width: 100%;
+export const HorsePlatformContainer = styled.div`
+    position: absolute;
+    left: 0;
+    bottom: 5%;
+    margin: 0 auto;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: flex-end;
+    align-items: center;
+`;
+
+export const Horseshoe = styled.img`
+    width: 48px;
+    position: relative;
+    top: 20px;
     margin: 0 auto;
 `;
 
+export const HorsePlatform = styled.img`
+    width: 40vw;
+    max-width: 244px;
+
+    @media and (min-width: 480px) {
+        width: 30vw;
+    }
+`;
+
 export const HorsesRight = styled.img`
+    position: absolute;
+    bottom: 5%;
+    right: -48px;
     max-width: 75%;
-    margin: auto -2rem 0 auto;
+    max-height: 244px;
+    object-fit: contain;
+
+    @media (min-width: 480px) {
+        max-height: 288px;
+    }
+
+    @media (min-width: 768px) {
+        max-height: 322px;
+        right: 10%;
+    }
+
+    @media (min-width: 1024px) {
+        right: 15%;
+    }
+
+    @media (min-width: 1200px) {
+        right: 25%;
+    }
 `;

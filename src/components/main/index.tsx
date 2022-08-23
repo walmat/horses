@@ -23,6 +23,7 @@ import {
     SelectedAmount,
     RightSelectedImage,
     LeftSelectedImage,
+    HorsePlatformContainer,
     FenceContainer,
     LeftFence,
     RightFence,
@@ -39,6 +40,8 @@ import {
     HorsesRight,
     ConnectButtonWrapper,
     GateColumn,
+    HiddenHorseContainer,
+    Horseshoe,
 } from "./styled";
 import useFetch from "@hooks/useFetch";
 
@@ -222,18 +225,15 @@ export const Main: React.FC = () => {
                             />
                             <RightFence src="/fence.png" />
                         </FenceContainer>
-                        <FooterContainer>
-                            <FooterColumn flex={1}>
-                                <HorsesLeft src="/left-horses.png" />
-                            </FooterColumn>
-                            <GateColumn flex={0}>
-                                <HiddenHorse src="/mystery.png" />
-                                <HorsePlatform src="/stand.png" />
-                            </GateColumn>
-                            <FooterColumn flex={1}>
-                                <HorsesRight src="/right-horses.png" />
-                            </FooterColumn>
-                        </FooterContainer>
+                        <HorsesLeft src="/left-horses.png" />
+                        <HiddenHorseContainer>
+                            <HiddenHorse src="/mystery.png" />
+                        </HiddenHorseContainer>
+                        <HorsePlatformContainer>
+                            <Horseshoe src="/horseshoe.png" />
+                            <HorsePlatform src="/stand.png" />
+                        </HorsePlatformContainer>
+                        <HorsesRight src="/right-horses.png" />
                     </Fragment>
                 )}
             </Wrapper>
