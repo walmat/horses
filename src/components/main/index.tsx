@@ -222,24 +222,18 @@ export const Main: React.FC = () => {
                             />
                             <RightFence src="/fence.png" />
                         </FenceContainer>
-                        {/* <FooterContainer>
+                        <FooterContainer>
                             <FooterColumn flex={1}>
-                                <LeftFence src="/fence.png" />
                                 <HorsesLeft src="/left-horses.png" />
                             </FooterColumn>
                             <GateColumn flex={0}>
-                                <Gate
-                                    $opacity={!selected.length ? 1 : 0}
-                                    src="/gate.png"
-                                />
                                 <HiddenHorse src="/mystery.png" />
                                 <HorsePlatform src="/stand.png" />
                             </GateColumn>
                             <FooterColumn flex={1}>
-                                <RightFence src="/fence.png" />
                                 <HorsesRight src="/right-horses.png" />
                             </FooterColumn>
-                        </FooterContainer> */}
+                        </FooterContainer>
                     </Fragment>
                 )}
             </Wrapper>

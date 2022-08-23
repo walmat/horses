@@ -6,7 +6,7 @@ export const Wrapper = styled.div<{ $fullscreen: boolean }>`
     justify-content: center;
     padding: 2rem 0;
     min-width: 100%;
-    color: ${({ theme }) => theme.colors.blackGrey};
+    color: #000;
     ${({ $fullscreen }) =>
         $fullscreen &&
         `
