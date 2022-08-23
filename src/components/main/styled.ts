@@ -41,13 +41,13 @@ export const SelectedImage = styled.img`
 `;
 
 export const Pardner = styled.img`
-    position: relative;
-    display: flex;
-    width: 35%;
+    position: absolute;
+    margin: 0;
+    left: 60vw;
+    bottom: -20px;
     min-width: 88px;
-    max-width: 144px;
-    min-height: 60px;
-    margin: 0 auto 0 0;
+    max-width: 48px;
+    min-height: 48px;
 `;
 
 export const SelectedAmount = styled.h2<{ $amount: number }>`

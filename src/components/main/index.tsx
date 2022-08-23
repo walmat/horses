@@ -214,6 +214,7 @@ export const Main: React.FC = () => {
                             }}
                         />
                         <FenceContainer>
+                            <Pardner src="/pardner.png" />
                             <LeftFence src="/fence.png" />
                             <Gate
                                 $opacity={!selected.length ? 1 : 0}
