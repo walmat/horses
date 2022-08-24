@@ -4,7 +4,6 @@ export const Wrapper = styled.div<{ $fullscreen: boolean }>`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 2rem 0;
     min-width: 100%;
     color: #000;
     ${({ $fullscreen }) =>
@@ -41,6 +40,16 @@ export const SelectedImage = styled.img`
     margin: 0 auto;
 `;
 
+export const TitleParagraph = styled.p`
+    max-width: 48rem;
+    padding: 0 2rem;
+    margin: 1rem auto;
+
+    @media (min-width: 1085px) {
+        margin: 2rem auto;
+    }
+`;
+
 export const Pardner = styled.img`
     position: absolute;
     margin: 0;
@@ -56,7 +65,7 @@ export const SelectedAmount = styled.h2<{ $amount: number }>`
     margin: 0;
     top: 8px;
     left: calc(50% - ${({ $amount }) => ($amount < 10 ? 6 : 10)}px);
-    font-size: 1.25rem;
+    font-size: 1rem;
 `;
 
 export const RightSelectedImage = styled.img`
@@ -77,6 +86,16 @@ export const SelectedContainer = styled.div`
     position: relative;
 `;
 
+export const SadSlinger = styled.img`
+    display: flex;
+    height: 48px;
+    margin: 0 auto;
+
+    @media (min-width: 1085px) {
+        height: 64px;
+    }
+`;
+
 export const Container = styled.div`
     text-align: center;
 
@@ -87,7 +106,7 @@ export const Container = styled.div`
         padding-bottom: 0.75rem;
     }
     p {
-        font-size: 1.25rem;
+        font-size: 1.125rem;
         font-weight: 300;
     }
 `;
@@ -95,12 +114,18 @@ export const Container = styled.div`
 export const SlingersContainer = styled.div`
     display: flex;
     flex-wrap: wrap;
-    margin: 2rem;
+    margin: 1rem;
     height: auto;
-    justify-content: center;
-    max-height: 10vh;
-    min-height: 88px;
+    justify-content: flex-start;
+    max-height: 20vh;
+    min-height: 64px;
     overflow-y: auto;
+
+    @media (min-width: 1085px) {
+        min-height: 88px;
+        margin: 2rem;
+        max-height: 12vh;
+    }
 `;
 
 export const FenceContainer = styled.div`
@@ -124,19 +149,81 @@ export const RightFence = styled.img`
 
 export const Slinger = styled.div`
     display: flex;
-    max-height: 88px;
-    margin: 0.5rem;
+    max-height: 64px;
+    margin: 0.795rem;
     position: relative;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
     z-index: 10;
+
+    @media (min-width: 600px) {
+        max-height: 88px;
+    }
+`;
+
+export const PublicSaleInfoContainer = styled.div`
+    display: flex;
+    max-width: 48rem;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 16px auto 0 auto;
+`;
+
+export const PublicSaleParagraph = styled.p`
+    font-size: 1.125rem;
+    padding: 0 2rem;
+    font-weight: 300;
+    text-align: center;
+    margin: 0;
+`;
+
+export const OpenseaButton = styled.img`
+    height: 28px;
+    cursor: pointer;
+    margin-right: 8px;
+
+    @media (min-width: 600px) {
+        height: 32px;
+    }
+`;
+export const LooksrareButton = styled.img`
+    height: 28px;
+    cursor: pointer;
+    margin-left: 8px;
+
+    @media (min-width: 600px) {
+        height: 32px;
+    }
+`;
+
+export const SecondaryRow = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 8px auto;
+    max-width: 100vw;
+
+    @media (min-width: 600px) {
+        margin: 16px auto;
+    }
+`;
+
+export const PublicSaleTitle = styled.h1`
+    font-size: 1.5rem;
 `;
 
 export const SelectedSlinger = styled.img`
     position: absolute;
-    bottom: 8px;
+    bottom: 0px;
     right: 8px;
     max-height: 16px;
+
+    @media (min-width: 600px) {
+        bottom: 8px;
+        right: 8px;
+    }
 `;
 
 export const UsedSlinger = styled.img`
@@ -152,11 +239,15 @@ export const SlingerImage = styled.img<{
     $isSelected: boolean;
 }>`
     display: flex;
-    max-height: 88px;
+    max-height: 64px;
     object-fit: contain;
     background-color: transparent;
     opacity: ${({ $isSelected, $isUsed }) =>
         $isSelected || $isUsed ? 1 : 0.6};
+
+    @media (min-width: 480px) {
+        max-height: 88px;
+    }
 `;
 
 export const HorsesLeft = styled.img`
@@ -188,7 +279,7 @@ export const HorsesLeft = styled.img`
 export const HiddenHorseContainer = styled.div`
     position: absolute;
     left: 0;
-    bottom: 25%;
+    bottom: 27.5%;
     margin: 0 auto;
     width: 100vw;
     height: 100vh;
@@ -207,6 +298,10 @@ export const HiddenHorseContainer = styled.div`
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: flex-end;
+
+    @media (min-width: 600px) {
+        bottom: 30%;
+    }
 `;
 
 export const HiddenHorse = styled.img`
@@ -222,7 +317,7 @@ export const HiddenHorse = styled.img`
 export const HorsePlatformContainer = styled.div`
     position: absolute;
     left: 0;
-    bottom: 5%;
+    bottom: -2.5%;
     margin: 0 auto;
     width: 100vw;
     height: 100vh;
@@ -231,17 +326,64 @@ export const HorsePlatformContainer = styled.div`
     flex: 1;
     justify-content: flex-end;
     align-items: center;
+
+    @media (min-width: 600px) {
+        bottom: -5%;
+    }
 `;
 
 export const Horseshoe = styled.img`
-    width: 48px;
     position: relative;
-    top: 20px;
-    margin: 0 auto;
+    width: 28px;
+    top: 12px;
+
+    @media (min-width: 600px) {
+        width: 48px;
+        top: 20px;
+    }
+`;
+
+export const SelectedHorseText = styled.p`
+    position: relative;
+    margin: 2px 0;
+    text-align: center;
+    top: -84px;
+    font-size: 0.875rem;
+    font-weight: 300;
+
+    @media (min-width: 600px) {
+        font-size: 1rem;
+        top: -100px;
+    }
+`;
+
+export const PriceText = styled.span`
+    position: relative;
+    margin: 0 0 0 4px;
+    font-weight: 300;
+    color: #1d9260;
+    font-size: 0.875rem;
+
+    @media (min-width: 600px) {
+        font-size: 1rem;
+    }
+`;
+
+export const GiddyUpButton = styled.img<{ $isSelected: boolean }>`
+    position: relative;
+    top: -80px;
+    width: 64px;
+    cursor: ${({ $isSelected }) => ($isSelected ? "pointer" : "default")};
+    opacity: ${({ $isSelected }) => ($isSelected ? 1 : 0.6)};
+
+    @media (min-width: 600px) {
+        top: -94px;
+        width: 84px;
+    }
 `;
 
 export const HorsePlatform = styled.img`
-    width: 40vw;
+    width: 50vw;
     max-width: 244px;
 
     @media and (min-width: 480px) {

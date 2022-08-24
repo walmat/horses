@@ -1,14 +1,9 @@
 import { useState, useEffect, Fragment } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import {
-    useAccount,
-    useContractRead,
-    useContractWrite,
-    usePrepareContractWrite,
-    useWaitForTransaction,
-} from "wagmi";
+import { useAccount, useContractRead } from "wagmi";
+import { toast } from "react-hot-toast";
 
-import { Logo } from "@components";
+import { Logo, Counter } from "@components";
 import { Slinger as SlingerInterface } from "@hooks/useSlingers";
 import { useMintStage } from "@hooks/useMintStage";
 import { horses } from "@contract";
@@ -31,30 +26,41 @@ import {
     Pardner,
     SlingerImage,
     UsedSlinger,
-    FooterContainer,
-    FooterColumn,
     HorsesLeft,
     HiddenHorse,
     HorsePlatform,
     SelectedSlinger,
     HorsesRight,
     ConnectButtonWrapper,
-    GateColumn,
     HiddenHorseContainer,
     Horseshoe,
+    SelectedHorseText,
+    PriceText,
+    GiddyUpButton,
+    PublicSaleInfoContainer,
+    PublicSaleTitle,
+    PublicSaleParagraph,
+    SecondaryRow,
+    OpenseaButton,
+    LooksrareButton,
+    SadSlinger,
+    TitleParagraph,
 } from "./styled";
 import useFetch from "@hooks/useFetch";
 
 interface SlingersProps {
     selected: string[];
     slingers: SlingerInterface[] | undefined;
+    stage: number;
     error: Error | undefined;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     handleSelectedSlinger: any;
 }
 
 const Slingers = ({
     selected,
     slingers,
+    stage,
     error,
     handleSelectedSlinger,
 }: SlingersProps) => {
@@ -65,6 +71,34 @@ const Slingers = ({
     if (!slingers) {
         return <></>;
     }
+
+    const unused = (slingers || []).filter(({ used }) => !used);
+    if (!unused.length) {
+        if (stage === 2) {
+            return (
+                <PublicSaleInfoContainer>
+                    <PublicSaleParagraph>
+                        SELECT THE NUMBER OF HORSES TO MINT (0.01ETH EACH)
+                    </PublicSaleParagraph>
+                    <PublicSaleParagraph>OR</PublicSaleParagraph>
+                    <PublicSaleParagraph>
+                        PURCHASE A GUNSLINGER TO CLAIM YOUR FREE HORSE(S)
+                    </PublicSaleParagraph>
+                    <SecondaryRow>
+                        <OpenseaButton src="/opensea.png" />
+                        <LooksrareButton src="/looksrare.png" />
+                    </SecondaryRow>
+                </PublicSaleInfoContainer>
+            );
+        } else {
+            return (
+                <PublicSaleInfoContainer>
+                    <PublicSaleTitle>Public Sale Not Open Yet!</PublicSaleTitle>
+                </PublicSaleInfoContainer>
+            );
+        }
+    }
+
     return (
         <SlingersContainer>
             {(slingers || []).map((slinger) => (
@@ -86,10 +120,75 @@ const Slingers = ({
     );
 };
 
+const Horses = ({
+    slingers,
+    selected,
+    handleMint,
+    stage,
+    amount,
+    setAmount,
+}: any) => {
+    const unused = (slingers || []).filter(({ used }: any) => !used).length;
+    // if (!unused && stage === 2) {
+    //     return null;
+    // }
+
+    if (stage === 2) {
+        return (
+            <>
+                <HiddenHorseContainer>
+                    <HiddenHorse src="/mystery.png" />
+                </HiddenHorseContainer>
+                <HorsePlatformContainer>
+                    <Counter amount={amount} setAmount={setAmount} />
+
+                    <Horseshoe src="/horseshoe.png" />
+                    <HorsePlatform src="/stand.png" />
+                    <SelectedHorseText>
+                        MINT {selected.length} HORSES
+                    </SelectedHorseText>
+                    <SelectedHorseText>
+                        PRICE: <PriceText>{amount * 0.01}Ξ</PriceText>
+                    </SelectedHorseText>
+                    <GiddyUpButton
+                        onClick={handleMint}
+                        $isSelected={amount > 0}
+                        src="/giddy.png"
+                    />
+                </HorsePlatformContainer>
+            </>
+        );
+    }
+
+    return (
+        <>
+            <HiddenHorseContainer>
+                <HiddenHorse src="/mystery.png" />
+            </HiddenHorseContainer>
+            <HorsePlatformContainer>
+                <Horseshoe src="/horseshoe.png" />
+                <HorsePlatform src="/stand.png" />
+                <SelectedHorseText>
+                    MINT {selected.length} HORSES
+                </SelectedHorseText>
+                <SelectedHorseText>
+                    PRICE: <PriceText>FREE!</PriceText>
+                </SelectedHorseText>
+                <GiddyUpButton
+                    onClick={handleMint}
+                    $isSelected={!!selected.length}
+                    src="/giddy.png"
+                />
+            </HorsePlatformContainer>
+        </>
+    );
+};
+
 export const Main: React.FC = () => {
-    const [title, setTitle] = useState("GATHERING WALLET INFORMATION...");
+    const [title, setTitle] = useState("");
     const [selected, setSelected] = useState<string[]>([]);
     const [totalMinted, setTotalMinted] = useState(0);
+    const [amount, setAmount] = useState(1);
 
     const stage = useMintStage();
     const { address } = useAccount();
@@ -101,39 +200,19 @@ export const Main: React.FC = () => {
         },
         body: JSON.stringify({ address }),
     });
-    // const { config: horsesConfig } = usePrepareContractWrite({
-    //     ...horses,
-    //     functionName: "claimHorses",
-    //     args: [selected],
-    // });
 
-    // const {
-    //     data: mintData,
-    //     write: mint,
-    //     isLoading: isMintLoading,
-    //     isSuccess: isMintStarted,
-    //     error: mintError,
-    // } = useContractWrite(horsesConfig);
+    const { data: totalSupply } = useContractRead({
+        ...horses,
+        functionName: "totalSupply",
+        watch: true,
+    });
 
-    // const { data: totalSupply } = useContractRead({
-    //     ...horses,
-    //     functionName: "totalSupply",
-    //     watch: true,
-    // });
-
-    // const {
-    //     data: txData,
-    //     isSuccess: txSuccess,
-    //     error: txError,
-    // } = useWaitForTransaction({
-    //     hash: mintData?.hash,
-    // });
-
-    // useEffect(() => {
-    //     if (totalSupply) {
-    //         setTotalMinted(totalSupply.toNumber());
-    //     }
-    // }, [totalSupply]);
+    useEffect(() => {
+        if (totalSupply) {
+            console.log(totalSupply.toNumber());
+            setTotalMinted(totalSupply.toNumber());
+        }
+    }, [totalSupply]);
 
     useEffect(() => {
         const getMessage = (
@@ -149,22 +228,31 @@ export const Main: React.FC = () => {
                 return setTitle("NO GUNSLINGERS FOUND IN YOUR WALLET");
             }
 
-            if (stage === 0) {
-                return setTitle("SALE PAUSED. HANG TIGHT PARTNER");
-            }
-
             if (stage === 1) {
                 return setTitle(
                     "SELECT YOUR GUNSLINGERS TO CLAIM YOUR FREE HORSES",
                 );
             }
+
+            if (stage === 2) {
+                return setTitle("PUBLIC SALE LIVE. SADDLE UP!");
+            }
         };
 
-        getMessage(address, stage, (data || []).length);
-    }, [title, setTitle, address, stage, (data || []).length]);
+        getMessage(
+            address,
+            stage,
+            (data || []).filter(({ used }) => !used).length,
+        );
+    }, [title, setTitle, address, stage, data]);
 
     const handleSelectedSlinger = async ({ id, used }: SlingerInterface) => {
         if (used) {
+            return;
+        }
+
+        if (selected.length === 100) {
+            toast.error("Maximum of 100 slingers selected.");
             return;
         }
 
@@ -172,6 +260,22 @@ export const Main: React.FC = () => {
             setSelected(selected.filter((s) => s !== id));
         } else {
             setSelected([...selected, id]);
+        }
+    };
+
+    const handleMint = async () => {
+        switch (stage) {
+            // paused
+            default:
+            case 0:
+                toast.error("SALE PAUSED. HANG TIGHT PARTNER!");
+                break;
+            // allowlist
+            case 1:
+                break;
+            // public
+            case 2:
+                break;
         }
     };
 
@@ -189,28 +293,34 @@ export const Main: React.FC = () => {
                     />
                 </ConnectButtonWrapper>
                 <Container>
-                    <p>{title}</p>
+                    <TitleParagraph>{title}</TitleParagraph>
                 </Container>
 
                 {address && (
                     <Fragment>
-                        <SelectedContainer>
-                            <SelectedImage
-                                src="/selected.png"
-                                alt="gunslingers selected"
-                            />
-                            <LeftSelectedImage src="/left.png" />
-                            <Container>
-                                <SelectedAmount $amount={selected.length}>
-                                    {selected.length}
-                                </SelectedAmount>
-                            </Container>
-                            <RightSelectedImage src="/right.png" />
-                        </SelectedContainer>
+                        {!(data || []).filter(({ used }) => !used).length ? (
+                            <SadSlinger src="/head.png" alt="head" />
+                        ) : (
+                            <SelectedContainer>
+                                <SelectedImage
+                                    src="/selected.png"
+                                    alt="gunslingers selected"
+                                />
+                                <LeftSelectedImage src="/left.png" />
+                                <Container>
+                                    <SelectedAmount $amount={selected.length}>
+                                        {selected.length}
+                                    </SelectedAmount>
+                                </Container>
+                                <RightSelectedImage src="/right.png" />
+                            </SelectedContainer>
+                        )}
+
                         <Slingers
                             {...{
                                 address,
                                 selected,
+                                stage,
                                 slingers: data,
                                 error,
                                 handleSelectedSlinger,
@@ -220,19 +330,25 @@ export const Main: React.FC = () => {
                             <Pardner src="/pardner.png" />
                             <LeftFence src="/fence.png" />
                             <Gate
-                                $opacity={!selected.length ? 1 : 0}
+                                $opacity={
+                                    !selected.length && stage !== 2 ? 1 : 0
+                                }
                                 src="/gate.png"
                             />
                             <RightFence src="/fence.png" />
                         </FenceContainer>
                         <HorsesLeft src="/left-horses.png" />
-                        <HiddenHorseContainer>
-                            <HiddenHorse src="/mystery.png" />
-                        </HiddenHorseContainer>
-                        <HorsePlatformContainer>
-                            <Horseshoe src="/horseshoe.png" />
-                            <HorsePlatform src="/stand.png" />
-                        </HorsePlatformContainer>
+                        <Horses
+                            {...{
+                                selected,
+                                slingers: data,
+                                handleMint,
+                                stage,
+                                amount,
+                                setAmount,
+                            }}
+                        />
+
                         <HorsesRight src="/right-horses.png" />
                     </Fragment>
                 )}
