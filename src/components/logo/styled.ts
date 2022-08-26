@@ -7,9 +7,13 @@ export const Wrapper = styled.div`
 export const LogoImage = styled.img`
     display: flex;
     max-width: 55%;
-    max-height: 114px;
+    max-height: 96px;
     margin: 0 auto;
     padding: 2rem 0 0 0;
+
+    @media (min-width: 600px) {
+        max-height: 114px;
+    }
 `;
 
 export const Container = styled.div`

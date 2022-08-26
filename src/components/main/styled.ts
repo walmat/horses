@@ -100,13 +100,13 @@ export const Container = styled.div`
     text-align: center;
 
     h1 {
-        font-size: 5.5rem;
+        font-size: 1.25rem;
         font-weight: 300;
         line-height: 1.2rem;
         padding-bottom: 0.75rem;
     }
     p {
-        font-size: 1.125rem;
+        font-size: 1rem;
         font-weight: 300;
     }
 `;
@@ -117,7 +117,7 @@ export const SlingersContainer = styled.div`
     margin: 1rem;
     height: auto;
     justify-content: flex-start;
-    max-height: 20vh;
+    max-height: 96px;
     min-height: 64px;
     overflow-y: auto;
 
@@ -132,9 +132,13 @@ export const FenceContainer = styled.div`
     position: absolute;
     width: 200vw;
     left: -50vw;
-    bottom: 40%;
+    bottom: 50%;
     display: flex;
     justify-content: center;
+
+    @media (min-width: 600px) {
+        bottom: 40%;
+    }
 `;
 
 export const LeftFence = styled.img``;
@@ -172,7 +176,7 @@ export const PublicSaleInfoContainer = styled.div`
 `;
 
 export const PublicSaleParagraph = styled.p`
-    font-size: 1.125rem;
+    font-size: 1rem;
     padding: 0 2rem;
     font-weight: 300;
     text-align: center;
@@ -211,7 +215,7 @@ export const SecondaryRow = styled.div`
 `;
 
 export const PublicSaleTitle = styled.h1`
-    font-size: 1.5rem;
+    font-size: 1.25rem;
 `;
 
 export const SelectedSlinger = styled.img`
@@ -252,8 +256,8 @@ export const SlingerImage = styled.img<{
 
 export const HorsesLeft = styled.img`
     position: absolute;
-    bottom: 7.5%;
-    left: -48px;
+    bottom: 17.5%;
+    left: -56px;
     max-width: 75%;
     max-height: 212px;
     object-fit: contain;
@@ -279,7 +283,7 @@ export const HorsesLeft = styled.img`
 export const HiddenHorseContainer = styled.div`
     position: absolute;
     left: 0;
-    bottom: 27.5%;
+    bottom: 37.5%;
     margin: 0 auto;
     width: 100vw;
     height: 100vh;
@@ -317,7 +321,7 @@ export const HiddenHorse = styled.img`
 export const HorsePlatformContainer = styled.div`
     position: absolute;
     left: 0;
-    bottom: -2.5%;
+    bottom: 5.5%;
     margin: 0 auto;
     width: 100vw;
     height: 100vh;
@@ -393,8 +397,8 @@ export const HorsePlatform = styled.img`
 
 export const HorsesRight = styled.img`
     position: absolute;
-    bottom: 5%;
-    right: -48px;
+    bottom: 15%;
+    right: -56px;
     max-width: 75%;
     max-height: 244px;
     object-fit: contain;

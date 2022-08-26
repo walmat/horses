@@ -2,18 +2,17 @@ import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 
 import { horses as horsesContract } from "@contract";
+import Provider from "@utils/provider";
 
-// 0 = paused, 1 = allowlist, 2 = public
-type Stage = 0 | 1 | 2;
+// -1 = unknown, 0 = paused, 1 = allowlist, 2 = public
+type Stage = -1 | 0 | 1 | 2;
 
 export const useMintStage = (): Stage => {
-    const [stage, setStage] = useState<Stage>(0);
+    const [stage, setStage] = useState<Stage>(-1);
     useEffect(() => {
         const getStage = async () => {
             try {
-                const provider = new ethers.providers.Web3Provider(
-                    window.ethereum,
-                );
+                const provider = Provider();
                 const Contract = new ethers.Contract(
                     horsesContract.addressOrName,
                     horsesContract.contractInterface,

@@ -47,6 +47,8 @@ import {
     TitleParagraph,
 } from "./styled";
 import useFetch from "@hooks/useFetch";
+import { ethers } from "ethers";
+import Provider from "@utils/provider";
 
 interface SlingersProps {
     selected: string[];
@@ -128,7 +130,11 @@ const Horses = ({
     amount,
     setAmount,
 }: any) => {
-    const unused = (slingers || []).filter(({ used }: any) => !used).length;
+    // const unused = (slingers || []).filter(({ used }: any) => !used).length;
+    // if (stage === -1) {
+    //     return null;
+    // }
+
     // if (!unused && stage === 2) {
     //     return null;
     // }
@@ -251,6 +257,7 @@ export const Main: React.FC = () => {
             return;
         }
 
+        toast.dismiss();
         if (selected.length === 100) {
             toast.error("Maximum of 100 slingers selected.");
             return;
@@ -264,6 +271,20 @@ export const Main: React.FC = () => {
     };
 
     const handleMint = async () => {
+        if (!address) {
+            return;
+        }
+
+        toast.dismiss();
+
+        const provider = Provider();
+        const signer = provider.getSigner();
+        const Contract = new ethers.Contract(
+            horses.addressOrName,
+            horses.contractInterface,
+            provider,
+        ).connect(signer);
+
         switch (stage) {
             // paused
             default:
@@ -272,10 +293,64 @@ export const Main: React.FC = () => {
                 break;
             // allowlist
             case 1:
+                if (selected.length === 0) {
+                    return;
+                }
+
+                if (selected.length === 1) {
+                    const pending = await Contract.claimHorse(selected[0]);
+
+                    const promise = pending.wait();
+                    toast.promise(promise, {
+                        loading: "txn submitted",
+                        success: "txn processed",
+                        error: "txn failed",
+                    });
+
+                    await promise;
+                } else {
+                    const pending = await Contract.claimHorses([
+                        ...selected.join(","),
+                    ]);
+
+                    const promise = pending.wait();
+                    toast.promise(promise, {
+                        loading: "txn submitted",
+                        success: "txn processed",
+                        error: "txn failed",
+                    });
+
+                    await promise;
+                }
+
                 break;
             // public
-            case 2:
+            case 2: {
+                let pending: any;
+
+                if (selected.length === 1) {
+                    pending = await Contract.claimHorse(selected[0]);
+                } else if (selected.length > 1) {
+                    pending = await Contract.claimHorses([
+                        ...selected.join(","),
+                    ]);
+                } else {
+                    pending = await Contract.mintHorses(amount, {
+                        value: ethers.utils.parseEther(`${amount * 0.01}`),
+                    });
+                }
+
+                const promise = pending.wait();
+                toast.promise(promise, {
+                    loading: "txn submitted",
+                    success: "txn processed",
+                    error: "txn failed",
+                });
+
+                await promise;
+
                 break;
+            }
         }
     };
 

@@ -27,6 +27,7 @@ export const slingersHandler = async (
     const Horses = new ethers.Contract(
         horsesContract.addressOrName,
         horsesContract.contractInterface,
+        // TODO: Change back once tested
         new ethers.providers.InfuraProvider(
             "rinkeby",
             process.env.NEXT_PUBLIC_NODE_ADDRESS,
