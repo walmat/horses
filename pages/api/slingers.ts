@@ -46,7 +46,7 @@ export const slingersHandler = async (
         const used = await Horses.checkIfGunslingerUsed(id);
         return {
             id,
-            used: true,
+            used,
             image: `https://gateway.pinata.cloud/ipfs/QmXmC5qJ5MsNpeABgGB5DnTekFRsD5E5bCmHEgA2zs3Udd/${id}.png`,
         };
     });

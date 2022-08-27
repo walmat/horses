@@ -137,6 +137,10 @@ export const FenceContainer = styled.div`
     justify-content: center;
 
     @media (min-width: 600px) {
+        bottom: 45%;
+    }
+
+    @media (min-width: 1024px) {
         bottom: 40%;
     }
 `;
@@ -263,19 +267,23 @@ export const HorsesLeft = styled.img`
     object-fit: contain;
 
     @media (min-width: 480px) {
+        bottom: 7.5%;
         max-height: 244px;
     }
 
     @media (min-width: 768px) {
+        bottom: 7.5%;
         max-height: 322px;
         left: 5%;
     }
 
     @media (min-width: 1024px) {
+        bottom: 7.5%;
         left: 15%;
     }
 
     @media (min-width: 1200px) {
+        bottom: 7.5%;
         left: 22.5%;
     }
 `;
@@ -404,19 +412,23 @@ export const HorsesRight = styled.img`
     object-fit: contain;
 
     @media (min-width: 480px) {
+        bottom: 5%;
         max-height: 288px;
     }
 
     @media (min-width: 768px) {
+        bottom: 5%;
         max-height: 322px;
         right: 10%;
     }
 
     @media (min-width: 1024px) {
+        bottom: 5%;
         right: 15%;
     }
 
     @media (min-width: 1200px) {
+        bottom: 5%;
         right: 25%;
     }
 `;

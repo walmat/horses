@@ -87,8 +87,18 @@ const Slingers = ({
                         PURCHASE A GUNSLINGER TO CLAIM YOUR FREE HORSE(S)
                     </PublicSaleParagraph>
                     <SecondaryRow>
-                        <OpenseaButton src="/opensea.png" />
-                        <LooksrareButton src="/looksrare.png" />
+                        <a
+                            target="_blank"
+                            href="https://opensea.io/collection/gunslingersnft"
+                        >
+                            <OpenseaButton src="/opensea.png" />
+                        </a>
+                        <a
+                            target="_blank"
+                            href="https://looksrare.org/collections/0x7350271594848ab8c0371ef4afeef199c69c3e05"
+                        >
+                            <LooksrareButton src="/looksrare.png" />
+                        </a>
                     </SecondaryRow>
                 </PublicSaleInfoContainer>
             );
@@ -130,14 +140,14 @@ const Horses = ({
     amount,
     setAmount,
 }: any) => {
-    // const unused = (slingers || []).filter(({ used }: any) => !used).length;
-    // if (stage === -1) {
-    //     return null;
-    // }
+    const unused = (slingers || []).filter(({ used }: any) => !used).length;
+    if (stage === -1) {
+        return null;
+    }
 
-    // if (!unused && stage === 2) {
-    //     return null;
-    // }
+    if (!unused && stage === 2) {
+        return null;
+    }
 
     if (stage === 2) {
         return (
