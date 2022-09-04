@@ -202,11 +202,15 @@ export const Slinger = styled.div`
 
 export const PublicSaleInfoContainer = styled.div`
     display: flex;
-    max-width: 48rem;
+    max-width: 100vw;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     margin: 16px auto 0 auto;
+
+    @media (max-width: 480px) {
+        max-width: 48rem;
+    }
 `;
 
 export const PublicSaleParagraph = styled.p`
