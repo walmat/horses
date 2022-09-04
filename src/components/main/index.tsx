@@ -397,7 +397,9 @@ export const Main: React.FC = () => {
                 }
             }
             // eslint-disable-next-line no-empty
-        } catch (_) {}
+        } catch (e) {
+            toast.error((e as any)?.message || "something went wrong");
+        }
     };
 
     return (
