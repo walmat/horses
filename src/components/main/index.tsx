@@ -1,6 +1,6 @@
 import { useState, useEffect, Fragment } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useAccount, useContractRead } from "wagmi";
+import { useAccount, useContract, useContractRead, useSigner } from "wagmi";
 import { toast } from "react-hot-toast";
 
 import { Logo, Counter } from "@components";
@@ -45,7 +45,6 @@ import {
     HorseColumn,
 } from "./styled";
 import { ethers } from "ethers";
-import Provider from "@utils/provider";
 
 interface SlingersProps {
     selected: string[];
@@ -201,6 +200,7 @@ export const Main: React.FC = () => {
     const [selected, setSelected] = useState<string[]>([]);
     const [totalMinted, setTotalMinted] = useState(0);
     const [amount, setAmount] = useState(1);
+    const { data: signer } = useSigner();
 
     const stage = useMintStage();
     const { address } = useAccount();
@@ -209,6 +209,11 @@ export const Main: React.FC = () => {
         ...horses,
         functionName: "totalSupply",
         watch: true,
+    });
+
+    const contract = useContract({
+        ...horses,
+        signerOrProvider: signer,
     });
 
     useEffect(() => {
@@ -312,19 +317,11 @@ export const Main: React.FC = () => {
     };
 
     const handleMint = async () => {
-        if (!address) {
+        if (!address || !signer) {
             return;
         }
 
         toast.dismiss();
-
-        const provider = Provider();
-        const signer = provider.getSigner();
-        const Contract = new ethers.Contract(
-            horses.addressOrName,
-            horses.contractInterface,
-            provider,
-        ).connect(signer);
 
         try {
             switch (stage) {
@@ -340,7 +337,7 @@ export const Main: React.FC = () => {
                     }
 
                     if (selected.length === 1) {
-                        const pending = await Contract.claimHorse(selected[0]);
+                        const pending = await contract.claimHorse(selected[0]);
 
                         const promise = pending.wait();
                         toast.promise(promise, {
@@ -351,7 +348,7 @@ export const Main: React.FC = () => {
 
                         await promise;
                     } else {
-                        const pending = await Contract.claimHorses([
+                        const pending = await contract.claimHorses([
                             ...selected.join(","),
                         ]);
 
@@ -371,15 +368,15 @@ export const Main: React.FC = () => {
                     let pending: any;
 
                     if (selected.length === 1) {
-                        pending = await Contract.claimHorse(selected[0], {
+                        pending = await contract.claimHorse(selected[0], {
                             gasLimit: 15000000,
                         });
                     } else if (selected.length > 1) {
-                        pending = await Contract.claimHorses([...selected], {
+                        pending = await contract.claimHorses([...selected], {
                             gasLimit: 15000000,
                         });
                     } else {
-                        pending = await Contract.mintHorses(amount, {
+                        pending = await contract.mintHorses(amount, {
                             value: ethers.utils.parseEther(`${amount / 100}`),
                         });
                     }
