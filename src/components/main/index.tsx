@@ -213,10 +213,10 @@ export const Main: React.FC = () => {
 
     useEffect(() => {
         const checkSelected = () =>
-            selected.forEach((slinger) => {
-                const found = slingers.find(({ id }) => id === slinger);
-                if (found) {
-                    setSelected(selected.filter((s) => s !== slinger));
+            selected.forEach((id) => {
+                const slinger = slingers.find(({ id: _id }) => _id === id);
+                if (slinger?.used) {
+                    setSelected(selected.filter((s) => s !== slinger.id));
                 }
             });
 
