@@ -396,9 +396,8 @@ export const Main: React.FC = () => {
                     break;
                 }
             }
-        } catch (_) {
-            console.error(_);
-        }
+            // eslint-disable-next-line no-empty
+        } catch (_) {}
     };
 
     return (

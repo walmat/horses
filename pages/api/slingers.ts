@@ -48,7 +48,6 @@ export const slingersHandler = async (
     });
 
     const slingers = await Promise.all(objects);
-    console.log(slingers);
 
     return res.status(200).json(slingers);
 };

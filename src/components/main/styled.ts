@@ -28,6 +28,15 @@ export const ConnectButtonWrapper = styled.div`
     top: 0;
     right: 0;
     z-index: 1000;
+    & > div > button > div > div > div > div {
+        display: none !important;
+    }
+
+    @media (min-width: 600px) {
+        & > div > button > div > div > div > div {
+            display: unset !important;
+        }
+    }
 `;
 
 export const SelectedImage = styled.img`
@@ -156,6 +165,10 @@ export const SlingersContainer = styled.div`
 
     &::-webkit-scrollbar {
         display: none;
+    }
+
+    @media (min-width: 480px) {
+        max-height: 12vh;
     }
 
     @media (min-width: 600px) {
@@ -333,10 +346,14 @@ export const HorsesLeft = styled.img`
 `;
 
 export const HiddenHorseContainer = styled.div`
-    margin: -32px auto 16px auto;
+    margin: -16px auto 0 auto;
     display: flex;
     flex: 1;
     justify-content: center;
+
+    @media (min-width: 600px) {
+        margin: -32px auto 16px auto;
+    }
 
     @media (min-width: 600px) {
         margin: -40px auto 16px auto;
@@ -353,7 +370,7 @@ export const HiddenHorseContainer = styled.div`
 
 export const HiddenHorse = styled.img`
     max-width: 100%;
-    height: 25vw;
+    height: 20vw;
     max-height: 118px;
 
     @media (min-width: 480px) {

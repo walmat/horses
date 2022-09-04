@@ -15,6 +15,8 @@ import {
 } from "@rainbow-me/rainbowkit";
 import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 
+import { useAccountChange } from "@hooks/useAccountChange";
+
 const { chains, provider } = configureChains(
     [chain.mainnet, chain.rinkeby],
     [publicProvider()],
@@ -52,6 +54,8 @@ const CustomAvatar: AvatarComponent = ({ ensImage, size }) => {
 };
 
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
+    useAccountChange();
+
     return (
         <RecoilRoot>
             <WagmiConfig client={client}>
