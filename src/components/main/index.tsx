@@ -20,10 +20,6 @@ import {
     LeftSelectedImage,
     HorsePlatformContainer,
     FenceContainer,
-    LeftFence,
-    RightFence,
-    Gate,
-    Pardner,
     SlingerImage,
     UsedSlinger,
     HorsesLeft,
@@ -45,8 +41,9 @@ import {
     LooksrareButton,
     SadSlinger,
     TitleParagraph,
+    HorseContainer,
+    HorseColumn,
 } from "./styled";
-import useFetch from "@hooks/useFetch";
 import { ethers } from "ethers";
 import Provider from "@utils/provider";
 
@@ -54,7 +51,6 @@ interface SlingersProps {
     selected: string[];
     slingers: SlingerInterface[] | undefined;
     stage: number;
-    error: Error | undefined;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     handleSelectedSlinger: any;
 }
@@ -63,13 +59,8 @@ const Slingers = ({
     selected,
     slingers,
     stage,
-    error,
     handleSelectedSlinger,
 }: SlingersProps) => {
-    if (error) {
-        return <div>{error.message}</div>;
-    }
-
     if (!slingers) {
         return <></>;
     }
@@ -139,36 +130,36 @@ const Horses = ({
     stage,
     amount,
     setAmount,
+    totalMinted,
 }: any) => {
     const unused = (slingers || []).filter(({ used }: any) => !used).length;
     if (stage === -1) {
         return null;
     }
 
-    if (!unused && stage === 2) {
+    if (!unused && stage !== 2) {
         return null;
     }
 
-    if (stage === 2) {
+    if (unused > 0) {
         return (
             <>
                 <HiddenHorseContainer>
                     <HiddenHorse src="/mystery.png" />
                 </HiddenHorseContainer>
                 <HorsePlatformContainer>
-                    <Counter amount={amount} setAmount={setAmount} />
-
                     <Horseshoe src="/horseshoe.png" />
                     <HorsePlatform src="/stand.png" />
                     <SelectedHorseText>
-                        MINT {selected.length} HORSES
+                        CLAIM {selected.length}{" "}
+                        {selected.length > 1 ? "HORSES" : "HORSE"}
                     </SelectedHorseText>
                     <SelectedHorseText>
-                        PRICE: <PriceText>{amount * 0.01}Ξ</PriceText>
+                        PRICE: <PriceText>FREE!</PriceText>
                     </SelectedHorseText>
                     <GiddyUpButton
                         onClick={handleMint}
-                        $isSelected={amount > 0}
+                        $isSelected={!!selected.length}
                         src="/giddy.png"
                     />
                 </HorsePlatformContainer>
@@ -182,17 +173,21 @@ const Horses = ({
                 <HiddenHorse src="/mystery.png" />
             </HiddenHorseContainer>
             <HorsePlatformContainer>
+                <Counter
+                    amount={amount}
+                    setAmount={setAmount}
+                    totalMinted={totalMinted}
+                />
+
                 <Horseshoe src="/horseshoe.png" />
                 <HorsePlatform src="/stand.png" />
+                <SelectedHorseText>MINT {amount} HORSES</SelectedHorseText>
                 <SelectedHorseText>
-                    MINT {selected.length} HORSES
-                </SelectedHorseText>
-                <SelectedHorseText>
-                    PRICE: <PriceText>FREE!</PriceText>
+                    PRICE: <PriceText>{amount / 100}Ξ</PriceText>
                 </SelectedHorseText>
                 <GiddyUpButton
                     onClick={handleMint}
-                    $isSelected={!!selected.length}
+                    $isSelected={amount > 0}
                     src="/giddy.png"
                 />
             </HorsePlatformContainer>
@@ -202,20 +197,13 @@ const Horses = ({
 
 export const Main: React.FC = () => {
     const [title, setTitle] = useState("");
+    const [slingers, setSlingers] = useState<SlingerInterface[]>([]);
     const [selected, setSelected] = useState<string[]>([]);
     const [totalMinted, setTotalMinted] = useState(0);
     const [amount, setAmount] = useState(1);
 
     const stage = useMintStage();
     const { address } = useAccount();
-
-    const { data = [], error } = useFetch<SlingerInterface[]>("/api/slingers", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ address }),
-    });
 
     const { data: totalSupply } = useContractRead({
         ...horses,
@@ -224,11 +212,54 @@ export const Main: React.FC = () => {
     });
 
     useEffect(() => {
+        const checkSelected = () =>
+            selected.forEach((slinger) => {
+                const found = slingers.find(({ id }) => id === slinger);
+                if (found) {
+                    setSelected(selected.filter((s) => s !== slinger));
+                }
+            });
+
+        checkSelected();
+
+        const int = setInterval(checkSelected, 1000);
+        return () => clearInterval(int);
+    }, [selected]);
+
+    useEffect(() => {
         if (totalSupply) {
-            console.log(totalSupply.toNumber());
             setTotalMinted(totalSupply.toNumber());
         }
     }, [totalSupply]);
+
+    useEffect(() => {
+        const getSlingers = async () => {
+            try {
+                const res = await fetch("/api/slingers", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ address }),
+                });
+
+                const data = await res.json();
+
+                if (data.length) {
+                    setSlingers(data);
+                } else {
+                    setSlingers([]);
+                }
+            } catch (_) {
+                setSlingers([]);
+            }
+        };
+
+        getSlingers();
+
+        const int = setInterval(getSlingers, 5000);
+        return () => clearInterval(int);
+    }, []);
 
     useEffect(() => {
         const getMessage = (
@@ -244,7 +275,7 @@ export const Main: React.FC = () => {
                 return setTitle("NO GUNSLINGERS FOUND IN YOUR WALLET");
             }
 
-            if (stage === 1) {
+            if (numSlingers > 0 || stage === 1) {
                 return setTitle(
                     "SELECT YOUR GUNSLINGERS TO CLAIM YOUR FREE HORSES",
                 );
@@ -258,9 +289,9 @@ export const Main: React.FC = () => {
         getMessage(
             address,
             stage,
-            (data || []).filter(({ used }) => !used).length,
+            (slingers || []).filter(({ used }) => !used).length,
         );
-    }, [title, setTitle, address, stage, data]);
+    }, [title, setTitle, address, stage, slingers]);
 
     const handleSelectedSlinger = async ({ id, used }: SlingerInterface) => {
         if (used) {
@@ -295,72 +326,78 @@ export const Main: React.FC = () => {
             provider,
         ).connect(signer);
 
-        switch (stage) {
-            // paused
-            default:
-            case 0:
-                toast.error("SALE PAUSED. HANG TIGHT PARTNER!");
-                break;
-            // allowlist
-            case 1:
-                if (selected.length === 0) {
-                    return;
-                }
+        try {
+            switch (stage) {
+                // paused
+                default:
+                case 0:
+                    toast.error("SALE PAUSED. HANG TIGHT PARTNER!");
+                    break;
+                // allowlist
+                case 1:
+                    if (selected.length === 0) {
+                        return;
+                    }
 
-                if (selected.length === 1) {
-                    const pending = await Contract.claimHorse(selected[0]);
+                    if (selected.length === 1) {
+                        const pending = await Contract.claimHorse(selected[0]);
+
+                        const promise = pending.wait();
+                        toast.promise(promise, {
+                            loading: "txn processing",
+                            success: "txn successful",
+                            error: "txn failed",
+                        });
+
+                        await promise;
+                    } else {
+                        const pending = await Contract.claimHorses([
+                            ...selected.join(","),
+                        ]);
+
+                        const promise = pending.wait();
+                        toast.promise(promise, {
+                            loading: "txn processing",
+                            success: "txn successful",
+                            error: "txn failed",
+                        });
+
+                        await promise;
+                    }
+
+                    break;
+                // public
+                case 2: {
+                    let pending: any;
+
+                    if (selected.length === 1) {
+                        pending = await Contract.claimHorse(selected[0], {
+                            gasLimit: 15000000,
+                        });
+                    } else if (selected.length > 1) {
+                        pending = await Contract.claimHorses([...selected], {
+                            gasLimit: 15000000,
+                        });
+                    } else {
+                        pending = await Contract.mintHorses(amount, {
+                            value: ethers.utils.parseEther(`${amount / 100}`),
+                        });
+                    }
 
                     const promise = pending.wait();
                     toast.promise(promise, {
-                        loading: "txn submitted",
-                        success: "txn processed",
+                        loading: "txn processing",
+                        success: "txn successful",
                         error: "txn failed",
                     });
 
                     await promise;
-                } else {
-                    const pending = await Contract.claimHorses([
-                        ...selected.join(","),
-                    ]);
 
-                    const promise = pending.wait();
-                    toast.promise(promise, {
-                        loading: "txn submitted",
-                        success: "txn processed",
-                        error: "txn failed",
-                    });
-
-                    await promise;
+                    break;
                 }
-
-                break;
-            // public
-            case 2: {
-                let pending: any;
-
-                if (selected.length === 1) {
-                    pending = await Contract.claimHorse(selected[0]);
-                } else if (selected.length > 1) {
-                    pending = await Contract.claimHorses([
-                        ...selected.join(","),
-                    ]);
-                } else {
-                    pending = await Contract.mintHorses(amount, {
-                        value: ethers.utils.parseEther(`${amount * 0.01}`),
-                    });
-                }
-
-                const promise = pending.wait();
-                toast.promise(promise, {
-                    loading: "txn submitted",
-                    success: "txn processed",
-                    error: "txn failed",
-                });
-
-                await promise;
-
-                break;
             }
+        } catch (_) {
+            console.error(_);
         }
     };
 
@@ -383,7 +420,7 @@ export const Main: React.FC = () => {
 
                 {address && (
                     <Fragment>
-                        {!(data || []).filter(({ used }) => !used).length ? (
+                        {!slingers.filter(({ used }) => !used).length ? (
                             <SadSlinger src="/head.png" alt="head" />
                         ) : (
                             <SelectedContainer>
@@ -406,35 +443,38 @@ export const Main: React.FC = () => {
                                 address,
                                 selected,
                                 stage,
-                                slingers: data,
-                                error,
+                                slingers,
                                 handleSelectedSlinger,
                             }}
                         />
-                        <FenceContainer>
-                            <Pardner src="/pardner.png" />
-                            <LeftFence src="/fence.png" />
-                            <Gate
-                                $opacity={
-                                    !selected.length && stage !== 2 ? 1 : 0
-                                }
-                                src="/gate.png"
-                            />
-                            <RightFence src="/fence.png" />
-                        </FenceContainer>
-                        <HorsesLeft src="/left-horses.png" />
-                        <Horses
-                            {...{
-                                selected,
-                                slingers: data,
-                                handleMint,
-                                stage,
-                                amount,
-                                setAmount,
-                            }}
+                        <FenceContainer
+                            src={
+                                !selected.length && stage !== 2
+                                    ? "/fence-locked.png"
+                                    : "fence-unlocked.png"
+                            }
                         />
-
-                        <HorsesRight src="/right-horses.png" />
+                        <HorseContainer>
+                            <HorseColumn>
+                                <HorsesLeft src="/left-horses.png" />
+                            </HorseColumn>
+                            <HorseColumn>
+                                <Horses
+                                    {...{
+                                        selected,
+                                        slingers,
+                                        handleMint,
+                                        stage,
+                                        amount,
+                                        setAmount,
+                                        totalMinted,
+                                    }}
+                                />
+                            </HorseColumn>
+                            <HorseColumn>
+                                <HorsesRight src="/right-horses.png" />
+                            </HorseColumn>
+                        </HorseContainer>
                     </Fragment>
                 )}
             </Wrapper>

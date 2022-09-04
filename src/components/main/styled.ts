@@ -38,15 +38,29 @@ export const SelectedImage = styled.img`
     max-width: 244px;
     min-height: 60px;
     margin: 0 auto;
+
+    @media (min-width: 600px) {
+        height: 10vh;
+        width: auto;
+        min-width: unset;
+        max-width: unset;
+    }
 `;
 
 export const TitleParagraph = styled.p`
-    max-width: 48rem;
+    max-width: 100vw;
     padding: 0 2rem;
     margin: 1rem auto;
+    font-size: 1.35rem !important;
+
+    @media (min-width: 600px) {
+        padding: 0 2rem;
+        font-size: 1.45rem !important;
+    }
 
     @media (min-width: 1085px) {
-        margin: 2rem auto;
+        padding: 0;
+        font-size: 1.65rem !important;
     }
 `;
 
@@ -66,6 +80,12 @@ export const SelectedAmount = styled.h2<{ $amount: number }>`
     top: 8px;
     left: calc(50% - ${({ $amount }) => ($amount < 10 ? 6 : 10)}px);
     font-size: 1rem;
+
+    @media (min-width: 600px) {
+        font-size: 1.5rem;
+        top: 10px;
+        left: calc(50% - ${({ $amount }) => ($amount < 10 ? 7 : 11)}px);
+    }
 `;
 
 export const RightSelectedImage = styled.img`
@@ -73,6 +93,11 @@ export const RightSelectedImage = styled.img`
     top: 12px;
     right: calc(50% - 48px);
     height: 20%;
+
+    @media (min-width: 600px) {
+        height: 25%;
+        right: calc(50% - 64px);
+    }
 `;
 
 export const LeftSelectedImage = styled.img`
@@ -80,6 +105,11 @@ export const LeftSelectedImage = styled.img`
     top: 12px;
     left: calc(50% - 48px);
     height: 20%;
+
+    @media (min-width: 600px) {
+        height: 25%;
+        left: calc(50% - 64px);
+    }
 `;
 
 export const SelectedContainer = styled.div`
@@ -114,60 +144,60 @@ export const Container = styled.div`
 export const SlingersContainer = styled.div`
     display: flex;
     flex-wrap: wrap;
-    margin: 1rem;
+    margin: 1rem auto;
     height: auto;
     justify-content: flex-start;
-    max-height: 96px;
-    min-height: 64px;
+    max-height: 10vh;
     overflow-y: auto;
+    max-width: 100vw;
+    padding: 0 2rem;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    @media (min-width: 600px) {
+        max-height: 15vh;
+        margin: 0 auto;
+        max-width: 48rem;
+    }
 
     @media (min-width: 1085px) {
-        min-height: 88px;
-        margin: 2rem;
-        max-height: 12vh;
+        margin: 0 auto;
+        max-height: 15vh;
+        max-width: 60rem;
     }
 `;
 
-export const FenceContainer = styled.div`
-    position: absolute;
-    width: 200vw;
-    left: -50vw;
-    bottom: 50%;
+export const FenceContainer = styled.img`
     display: flex;
     justify-content: center;
+    align-items: center;
+    max-width: 175vw;
 
-    @media (min-width: 600px) {
-        bottom: 45%;
+    @media (min-width: 768px) {
+        max-width: 150vw;
     }
 
     @media (min-width: 1024px) {
-        bottom: 40%;
+        max-width: 110vw;
     }
-`;
 
-export const LeftFence = styled.img``;
-
-export const Gate = styled.img<{ $opacity: number }>`
-    opacity: ${({ $opacity }) => $opacity};
-`;
-
-export const RightFence = styled.img`
-    min-height: 64px;
+    @media (min-width: 1200px) {
+        max-width: 110vw;
+    }
 `;
 
 export const Slinger = styled.div`
     display: flex;
-    max-height: 64px;
     margin: 0.795rem;
     position: relative;
     justify-content: center;
     align-items: center;
     cursor: pointer;
     z-index: 10;
-
-    @media (min-width: 600px) {
-        max-height: 88px;
-    }
 `;
 
 export const PublicSaleInfoContainer = styled.div`
@@ -254,100 +284,92 @@ export const SlingerImage = styled.img<{
         $isSelected || $isUsed ? 1 : 0.6};
 
     @media (min-width: 480px) {
-        max-height: 88px;
+        max-height: 12vh;
     }
 `;
 
-export const HorsesLeft = styled.img`
-    position: absolute;
-    bottom: 17.5%;
-    left: -56px;
-    max-width: 75%;
-    max-height: 212px;
-    object-fit: contain;
+export const HorseContainer = styled.div`
+    display: flex;
+    max-height: 40vh;
+    flex: 1;
+    margin: 0;
+`;
 
-    @media (min-width: 480px) {
-        bottom: 7.5%;
-        max-height: 244px;
+export const HorseColumn = styled.div`
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+`;
+
+export const HorsesLeft = styled.img`
+    max-height: 32vh;
+    display: flex;
+    object-fit: contain;
+    margin: 0 -5vw 0 auto;
+
+    @media (min-width: 600px) {
+        max-height: 32vh;
+        margin: 32px -5vw 0 auto;
     }
 
     @media (min-width: 768px) {
-        bottom: 7.5%;
-        max-height: 322px;
-        left: 5%;
+        max-height: 32vh;
+        margin: 32px -5vw 0 auto;
     }
 
-    @media (min-width: 1024px) {
-        bottom: 7.5%;
-        left: 15%;
-    }
-
-    @media (min-width: 1200px) {
-        bottom: 7.5%;
-        left: 22.5%;
+    @media (min-width: 900px) {
+        max-height: 32vh;
+        margin: 8px -5vw 0 auto;
     }
 `;
 
 export const HiddenHorseContainer = styled.div`
-    position: absolute;
-    left: 0;
-    bottom: 37.5%;
-    margin: 0 auto;
-    width: 100vw;
-    height: 100vh;
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
+    margin: -8px auto 16px auto;
     display: flex;
-    -webkit-flex: 1;
-    -ms-flex: 1;
     flex: 1;
-    -webkit-box-pack: center;
-    -webkit-justify-content: center;
-    -ms-flex-pack: center;
     justify-content: center;
-    -webkit-align-items: center;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: flex-end;
 
     @media (min-width: 600px) {
-        bottom: 30%;
+        margin: -40px auto 16px auto;
+    }
+
+    @media (min-width: 768px) {
+        margin: -40px auto 16px auto;
+    }
+
+    @media (min-width: 900px) {
+        margin: -58px auto 16px auto;
     }
 `;
 
 export const HiddenHorse = styled.img`
     max-width: 100%;
     height: 25vw;
-    max-height: 112px;
+    max-height: 118px;
 
-    @media and (min-width: 480px) {
-        height: 20vw;
+    @media (min-width: 600px) {
+        height: 25vw;
+        max-height: 136px;
     }
 `;
 
 export const HorsePlatformContainer = styled.div`
-    position: absolute;
-    left: 0;
-    bottom: 5.5%;
     margin: 0 auto;
-    width: 100vw;
-    height: 100vh;
     display: flex;
     flex-direction: column;
     flex: 1;
     justify-content: flex-end;
     align-items: center;
 
-    @media (min-width: 600px) {
-        bottom: -5%;
+    @media (min-width: 768px) {
+        margin: 0 auto;
     }
 `;
 
 export const Horseshoe = styled.img`
     position: relative;
-    width: 28px;
-    top: 12px;
+    width: 40px;
+    top: 18px;
 
     @media (min-width: 600px) {
         width: 48px;
@@ -383,7 +405,7 @@ export const PriceText = styled.span`
 
 export const GiddyUpButton = styled.img<{ $isSelected: boolean }>`
     position: relative;
-    top: -80px;
+    top: -78px;
     width: 64px;
     cursor: ${({ $isSelected }) => ($isSelected ? "pointer" : "default")};
     opacity: ${({ $isSelected }) => ($isSelected ? 1 : 0.6)};
@@ -396,39 +418,32 @@ export const GiddyUpButton = styled.img<{ $isSelected: boolean }>`
 
 export const HorsePlatform = styled.img`
     width: 50vw;
-    max-width: 244px;
+    max-width: 212px;
 
-    @media and (min-width: 480px) {
-        width: 30vw;
+    @media (min-width: 600px) {
+        width: 50vw;
+        max-width: 248px;
     }
 `;
 
 export const HorsesRight = styled.img`
-    position: absolute;
-    bottom: 15%;
-    right: -56px;
-    max-width: 75%;
-    max-height: 244px;
+    max-height: 40vh;
+    display: flex;
     object-fit: contain;
+    margin: -36px auto 0 -5vw;
 
-    @media (min-width: 480px) {
-        bottom: 5%;
-        max-height: 288px;
+    @media (min-width: 600px) {
+        max-height: 40vh;
+        margin: -16px auto 0 -10vw;
     }
 
     @media (min-width: 768px) {
-        bottom: 5%;
-        max-height: 322px;
-        right: 10%;
+        max-height: 42vh;
+        margin: -32px auto 0 -5vw;
     }
 
-    @media (min-width: 1024px) {
-        bottom: 5%;
-        right: 15%;
-    }
-
-    @media (min-width: 1200px) {
-        bottom: 5%;
-        right: 25%;
+    @media (min-width: 900px) {
+        max-height: 42vh;
+        margin: -58px auto 0 -5vw;
     }
 `;

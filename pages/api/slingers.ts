@@ -27,11 +27,7 @@ export const slingersHandler = async (
     const Horses = new ethers.Contract(
         horsesContract.addressOrName,
         horsesContract.contractInterface,
-        // TODO: Change back once tested
-        new ethers.providers.InfuraProvider(
-            "rinkeby",
-            process.env.NEXT_PUBLIC_NODE_ADDRESS,
-        ),
+        provider,
     ).connect(ethers.constants.AddressZero);
 
     const _num = (await Contract.balanceOf(address)).toNumber();
@@ -47,7 +43,7 @@ export const slingersHandler = async (
         return {
             id,
             used,
-            image: `https://gateway.pinata.cloud/ipfs/QmXmC5qJ5MsNpeABgGB5DnTekFRsD5E5bCmHEgA2zs3Udd/${id}.png`,
+            image: `/pngs/${id}.png`,
         };
     });
 

@@ -8,7 +8,7 @@ const Provider = (): providers.JsonRpcProvider | providers.Web3Provider => {
         return new ethers.providers.Web3Provider(window.ethereum);
     } else {
         return new ethers.providers.InfuraProvider(
-            "mainnet",
+            "rinkeby",
             process.env.NEXT_PUBLIC_NODE_ADDRESS,
         );
     }

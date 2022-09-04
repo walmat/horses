@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import { AppProps } from "next/app";
 import { RecoilRoot } from "recoil";
+import { Toaster } from "react-hot-toast";
 
 import "@rainbow-me/rainbowkit/styles.css";
 
@@ -15,7 +16,7 @@ import {
 import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 
 const { chains, provider } = configureChains(
-    [chain.mainnet],
+    [chain.mainnet, chain.rinkeby],
     [publicProvider()],
 );
 
@@ -67,6 +68,38 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
                         overlayBlur: "small",
                     })}
                 >
+                    <Toaster
+                        position="top-center"
+                        reverseOrder={false}
+                        toastOptions={{
+                            style: {
+                                fontFamily: "BadMedicine",
+                                padding: "8px 16px",
+                                borderRadius: 8,
+                                background: "url(/cardboard.png)",
+                                backgroundColor: "#000",
+                                color: "#fff",
+                            },
+                            success: {
+                                iconTheme: {
+                                    primary: "#000",
+                                    secondary: "#fff",
+                                },
+                            },
+                            loading: {
+                                iconTheme: {
+                                    primary: "#000",
+                                    secondary: "#fff",
+                                },
+                            },
+                            error: {
+                                iconTheme: {
+                                    primary: "#000",
+                                    secondary: "#fff",
+                                },
+                            },
+                        }}
+                    />
                     {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
                     {/* @ts-ignore */}
                     <Component {...pageProps} />

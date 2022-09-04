@@ -12,7 +12,7 @@ export const LogoImage = styled.img`
     padding: 2rem 0 0 0;
 
     @media (min-width: 600px) {
-        max-height: 114px;
+        max-height: 136px;
     }
 `;
 

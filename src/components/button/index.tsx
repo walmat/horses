@@ -4,12 +4,13 @@ import styled from "styled-components";
 type Props = {
     amount: number;
     setAmount: Dispatch<SetStateAction<number>>;
+    totalMinted: number;
 };
 
 export const blockInvalidChar = (e: any) =>
     ["e", "E", "+", "-"].includes(e.key) && e.preventDefault();
 
-export const Counter = ({ amount, setAmount }: Props): any => {
+export const Counter = ({ amount, setAmount, totalMinted }: Props): any => {
     return (
         <Flex>
             <Button
@@ -36,8 +37,8 @@ export const Counter = ({ amount, setAmount }: Props): any => {
                         return setAmount(1);
                     }
 
-                    if (n > 7777) {
-                        return setAmount(7777);
+                    if (n > 7777 - totalMinted) {
+                        return setAmount(7777 - totalMinted);
                     }
 
                     setAmount(n);
@@ -72,8 +73,8 @@ export const Counter = ({ amount, setAmount }: Props): any => {
 
 export const Flex = styled.div`
     display: flex;
-    height: 48px;
-    width: 110px;
+    height: 58px;
+    width: 128px;
     background-color: #456c92;
     align-items: center;
     border-radius: 8px;
