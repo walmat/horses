@@ -395,7 +395,19 @@ export const Main: React.FC = () => {
             }
             // eslint-disable-next-line no-empty
         } catch (e) {
-            toast.error((e as any)?.message || "something went wrong");
+            const msg = (e as any)?.message || "--";
+
+            if (/insufficient funds/i.test(msg)) {
+                toast.error("txn failed. insufficient funds");
+            } else if (/exceeds total supply/i.test(msg)) {
+                toast.error("txn failed. sold out");
+            } else if (/wallet already claimed/i.test(msg)) {
+                toast.error("txn failed. already claimed");
+            } else if (/sale not active/i.test(msg)) {
+                toast.error("txn failed. sale not started");
+            } else {
+                toast.error("txn failed. try again");
+            }
         }
     };
 
