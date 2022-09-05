@@ -1,11 +1,6 @@
 import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
-  @font-face {
-    font-family: "BadMedicine";
-    src: url('/fonts/DK Bad Medicine.otf');
-  }    
-
   html, body, #__next, #__next > div {
     width: 100vw;
     height: 100vh;
@@ -19,7 +14,9 @@ const GlobalStyle = createGlobalStyle`
     min-width: 0;
     scroll-behaviour: smooth;
     box-sizing: border-box;
-    font-family: "BadMedicine" !important;
+    font-family: "corn-dog" !important;
+    font-weight: 400;
+    font-style: normal;
   }
 
   img {
