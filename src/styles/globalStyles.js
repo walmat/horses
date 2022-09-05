@@ -4,8 +4,11 @@ const GlobalStyle = createGlobalStyle`
   html, body, #__next, #__next > div {
     width: 100vw;
     height: 100vh;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     position: relative;
+    background: url("/background.jpg");
+
   }
 
   *,

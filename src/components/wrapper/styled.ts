@@ -6,7 +6,6 @@ export const Container = styled.div`
     align-items: center;
     min-height: 100%;
     max-width: 100%;
-    background: url("/background.jpg");
 `;
 
 export const Inner = styled.div<{ isSignedIn: boolean }>`

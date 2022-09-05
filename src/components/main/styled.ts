@@ -19,7 +19,6 @@ export const FullscreenWrapper = styled.div`
     justify-content: center;
     align-items: center;
     padding: 0 0 2rem 0;
-    color: ${({ theme }) => theme.colors.blackGrey};
 `;
 
 export const ConnectButtonWrapper = styled.div`
