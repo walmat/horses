@@ -322,11 +322,11 @@ export const HorsesLeft = styled.img`
     max-height: 28vh;
     display: flex;
     object-fit: contain;
-    margin: 0 -5vw 0 auto;
+    margin: 0 -2.5vw 0 auto;
 
     @media (min-width: 480px) {
-        max-height: 32vh;
-        margin: 0px -5vw 0 auto;
+        max-height: 26vh;
+        margin: 16px -1vw 0px auto;
     }
 
     @media (min-width: 600px) {
@@ -346,7 +346,7 @@ export const HorsesLeft = styled.img`
 `;
 
 export const HiddenHorseContainer = styled.div`
-    margin: -16px auto 0 auto;
+    margin: -24px auto 0 auto;
     display: flex;
     flex: 1;
     justify-content: center;
@@ -370,11 +370,11 @@ export const HiddenHorseContainer = styled.div`
 
 export const HiddenHorse = styled.img`
     max-width: 100%;
-    height: 20vw;
+    height: 22.5vw;
     max-height: 118px;
 
     @media (min-width: 480px) {
-        height: 25vw;
+        height: 20vw;
         max-height: 100px;
     }
 
@@ -385,7 +385,7 @@ export const HiddenHorse = styled.img`
 `;
 
 export const HorsePlatformContainer = styled.div`
-    margin: 0 auto;
+    margin: 16px auto 0 auto;
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -458,14 +458,14 @@ export const HorsePlatform = styled.img`
 `;
 
 export const HorsesRight = styled.img`
-    max-height: 38vh;
+    max-height: 36vh;
     display: flex;
     object-fit: contain;
-    margin: -42px auto 0 -5vw;
+    margin: -32px auto 0 -5vw;
 
     @media (min-width: 480px) {
-        max-height: 40vh;
-        margin: -16px auto 0 -10vw;
+        max-height: 34vh;
+        margin: -36px auto 0px -10vw;
     }
 
     @media (min-width: 600px) {

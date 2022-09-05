@@ -73,7 +73,7 @@ export const Counter = ({ amount, setAmount, totalMinted }: Props): any => {
 
 export const Flex = styled.div`
     display: flex;
-    height: 58px;
+    height: 48px;
     width: 128px;
     background-color: #456c92;
     align-items: center;
@@ -84,6 +84,11 @@ export const Flex = styled.div`
     margin: 0 auto;
     box-shadow: 1px 3px 0;
     font-size: 16px;
+
+    @media (min-width: 480px) {
+        height: 58px;
+        width: 128px;
+    }
 `;
 
 export const Button = styled.button`
