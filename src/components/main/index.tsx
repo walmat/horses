@@ -1,4 +1,6 @@
-import { useState, useEffect, Fragment } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import { useState, useEffect, Fragment, Dispatch, SetStateAction } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount, useContract, useContractRead, useSigner } from "wagmi";
 import { toast } from "react-hot-toast";
@@ -50,7 +52,6 @@ interface SlingersProps {
     selected: string[];
     slingers: SlingerInterface[] | undefined;
     stage: number;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     handleSelectedSlinger: any;
 }
 
@@ -61,6 +62,10 @@ const Slingers = ({
     handleSelectedSlinger,
 }: SlingersProps) => {
     if (!slingers) {
+        return <></>;
+    }
+
+    if (stage < 1) {
         return <></>;
     }
 
@@ -122,6 +127,16 @@ const Slingers = ({
     );
 };
 
+interface HorsesProps {
+    slingers: SlingerInterface[];
+    selected: string[];
+    handleMint: () => Promise<void>;
+    stage: -1 | 0 | 1 | 2;
+    amount: number;
+    setAmount: Dispatch<SetStateAction<number>>;
+    totalMinted: number;
+}
+
 const Horses = ({
     slingers,
     selected,
@@ -130,9 +145,9 @@ const Horses = ({
     amount,
     setAmount,
     totalMinted,
-}: any) => {
-    const unused = (slingers || []).filter(({ used }: any) => !used).length;
-    if (stage === -1) {
+}: HorsesProps) => {
+    const unused = slingers.filter(({ used }) => !used).length;
+    if (stage < 1) {
         return null;
     }
 
@@ -227,7 +242,7 @@ export const Main: React.FC = () => {
 
         checkSelected();
 
-        const int = setInterval(checkSelected, 1000);
+        const int = setInterval(checkSelected, 10_000);
         return () => clearInterval(int);
     }, [selected]);
 
@@ -262,7 +277,7 @@ export const Main: React.FC = () => {
 
         getSlingers();
 
-        const int = setInterval(getSlingers, 5000);
+        const int = setInterval(getSlingers, 10_000);
         return () => clearInterval(int);
     }, []);
 
@@ -274,6 +289,10 @@ export const Main: React.FC = () => {
         ) => {
             if (!address) {
                 return setTitle("PLEASE CONNECT YOUR WALLET");
+            }
+
+            if (stage < 1) {
+                return setTitle("SALE PAUSED. HANG TIGHT PARTNER!");
             }
 
             if (numSlingers === 0) {
@@ -395,15 +414,15 @@ export const Main: React.FC = () => {
             }
             // eslint-disable-next-line no-empty
         } catch (e) {
-            const msg = (e as any)?.message || "--";
+            const msg = (e as any)?.message || "txn failed. try again.";
 
             if (/insufficient funds/i.test(msg)) {
                 toast.error("txn failed. insufficient funds");
-            } else if (/exceeds total supply/i.test(msg)) {
+            } else if (/exceeded/i.test(msg)) {
                 toast.error("txn failed. sold out");
             } else if (/wallet already claimed/i.test(msg)) {
                 toast.error("txn failed. already claimed");
-            } else if (/sale not active/i.test(msg)) {
+            } else if (/sale not started/i.test(msg)) {
                 toast.error("txn failed. sale not started");
             } else {
                 toast.error("txn failed. try again");
@@ -430,7 +449,8 @@ export const Main: React.FC = () => {
 
                 {address && (
                     <Fragment>
-                        {!slingers.filter(({ used }) => !used).length ? (
+                        {stage < 1 ||
+                        !slingers.filter(({ used }) => !used).length ? (
                             <SadSlinger src="/head.png" alt="head" />
                         ) : (
                             <SelectedContainer>

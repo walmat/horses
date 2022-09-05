@@ -128,7 +128,7 @@ export const SelectedContainer = styled.div`
 export const SadSlinger = styled.img`
     display: flex;
     height: 48px;
-    margin: 0 auto;
+    margin: 16px auto;
 
     @media (min-width: 1085px) {
         height: 64px;
@@ -267,6 +267,7 @@ export const SecondaryRow = styled.div`
 
 export const PublicSaleTitle = styled.h1`
     font-size: 1.25rem;
+    text-transform: uppercase;
 `;
 
 export const SelectedSlinger = styled.img`
