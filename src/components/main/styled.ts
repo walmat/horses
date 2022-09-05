@@ -221,7 +221,7 @@ export const PublicSaleInfoContainer = styled.div`
     align-items: center;
     margin: 16px auto 0 auto;
 
-    @media (min-width: 480px) {
+    @media (min-width: 600px) {
         max-width: 48rem;
     }
 `;
