@@ -202,7 +202,7 @@ export const FenceContainer = styled.img`
     }
 `;
 
-export const Slinger = styled.div`
+export const SlingerWrapper = styled.div`
     display: flex;
     margin: 0.795rem;
     position: relative;

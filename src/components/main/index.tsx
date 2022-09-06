@@ -6,8 +6,12 @@ import { useAccount, useContract, useContractRead, useSigner } from "wagmi";
 import { toast } from "react-hot-toast";
 
 import { Logo, Counter } from "@components";
-import { Slinger as SlingerInterface } from "@hooks/useSlingers";
 import { useMintStage } from "@hooks/useMintStage";
+import { useTotalMinted } from "@hooks/useTotalMinted";
+import { useSlingers, Slinger } from "@hooks/useSlingers";
+import { useSelected } from "@hooks/useSelected";
+import { useTitle } from "@hooks/useTitle";
+
 import { horses } from "@contract";
 
 import {
@@ -15,7 +19,7 @@ import {
     Container,
     SelectedContainer,
     SelectedImage,
-    Slinger,
+    SlingerWrapper,
     SlingersContainer,
     SelectedAmount,
     RightSelectedImage,
@@ -50,16 +54,16 @@ import { ethers } from "ethers";
 
 interface SlingersProps {
     selected: string[];
-    slingers: SlingerInterface[] | undefined;
+    slingers: Slinger[];
     stage: number;
-    handleSelectedSlinger: any;
+    handleSelectSlinger: (slinger: Slinger) => void;
 }
 
 const Slingers = ({
     selected,
     slingers,
     stage,
-    handleSelectedSlinger,
+    handleSelectSlinger,
 }: SlingersProps) => {
     if (!slingers) {
         return <></>;
@@ -69,7 +73,7 @@ const Slingers = ({
         return <></>;
     }
 
-    const unused = (slingers || []).filter(({ used }) => !used);
+    const unused = slingers.filter(({ used }) => !used);
     if (!unused.length) {
         if (stage === 2) {
             return (
@@ -108,27 +112,27 @@ const Slingers = ({
 
     return (
         <SlingersContainer>
-            {(slingers || []).map((slinger) => (
-                <Slinger>
+            {slingers.map((slinger) => (
+                <SlingerWrapper>
                     {slinger.used && <UsedSlinger src="/claimed.png" />}
                     <SlingerImage
                         $isUsed={slinger.used}
                         $isSelected={selected.includes(slinger.id)}
-                        onClick={() => handleSelectedSlinger(slinger)}
+                        onClick={() => handleSelectSlinger(slinger)}
                         src={slinger.image}
                         alt={slinger.id}
                     />
                     {selected.includes(slinger.id) && (
                         <SelectedSlinger src="/error.png" />
                     )}
-                </Slinger>
+                </SlingerWrapper>
             ))}
         </SlingersContainer>
     );
 };
 
 interface HorsesProps {
-    slingers: SlingerInterface[];
+    slingers: Slinger[];
     selected: string[];
     handleMint: () => Promise<void>;
     stage: -1 | 0 | 1 | 2;
@@ -210,15 +214,14 @@ const Horses = ({
 };
 
 export const Main: React.FC = () => {
-    const [title, setTitle] = useState("");
-    const [slingers, setSlingers] = useState<SlingerInterface[]>([]);
-    const [selected, setSelected] = useState<string[]>([]);
-    const [totalMinted, setTotalMinted] = useState(0);
     const [amount, setAmount] = useState(1);
     const { data: signer } = useSigner();
 
     const stage = useMintStage();
     const { address } = useAccount();
+
+    const slingers = useSlingers({ address });
+    const { selected, handleSelectSlinger } = useSelected({ slingers });
 
     const { data: totalSupply } = useContractRead({
         ...horses,
@@ -226,114 +229,13 @@ export const Main: React.FC = () => {
         watch: true,
     });
 
+    const totalMinted = useTotalMinted({ totalSupply });
     const contract = useContract({
         ...horses,
         signerOrProvider: signer,
     });
 
-    useEffect(() => {
-        const checkSelected = () =>
-            selected.forEach((id) => {
-                const slinger = slingers.find(({ id: _id }) => _id === id);
-                if (slinger?.used) {
-                    setSelected(selected.filter((s) => s !== slinger.id));
-                }
-            });
-
-        checkSelected();
-
-        const int = setInterval(checkSelected, 10_000);
-        return () => clearInterval(int);
-    }, [selected]);
-
-    useEffect(() => {
-        if (totalSupply) {
-            setTotalMinted(totalSupply.toNumber());
-        }
-    }, [totalSupply]);
-
-    useEffect(() => {
-        const getSlingers = async () => {
-            try {
-                const res = await fetch("/api/slingers", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ address }),
-                });
-
-                const data = await res.json();
-
-                if (data.length) {
-                    setSlingers(data);
-                } else {
-                    setSlingers([]);
-                }
-            } catch (_) {
-                setSlingers([]);
-            }
-        };
-
-        getSlingers();
-
-        const int = setInterval(getSlingers, 10_000);
-        return () => clearInterval(int);
-    }, []);
-
-    useEffect(() => {
-        const getMessage = (
-            address: string | undefined,
-            stage: number,
-            numSlingers: number,
-        ) => {
-            if (!address) {
-                return setTitle("PLEASE CONNECT YOUR WALLET");
-            }
-
-            if (stage < 1) {
-                return setTitle("SALE PAUSED. HANG TIGHT PARTNER!");
-            }
-
-            if (numSlingers === 0) {
-                return setTitle("NO GUNSLINGERS FOUND IN YOUR WALLET");
-            }
-
-            if (numSlingers > 0 || stage === 1) {
-                return setTitle(
-                    "SELECT YOUR GUNSLINGERS TO CLAIM YOUR FREE HORSES",
-                );
-            }
-
-            if (stage === 2) {
-                return setTitle("PUBLIC SALE LIVE. SADDLE UP!");
-            }
-        };
-
-        getMessage(
-            address,
-            stage,
-            (slingers || []).filter(({ used }) => !used).length,
-        );
-    }, [title, setTitle, address, stage, slingers]);
-
-    const handleSelectedSlinger = async ({ id, used }: SlingerInterface) => {
-        if (used) {
-            return;
-        }
-
-        toast.dismiss();
-        if (selected.length === 100) {
-            toast.error("Maximum of 100 slingers selected.");
-            return;
-        }
-
-        if (selected.includes(id)) {
-            setSelected(selected.filter((s) => s !== id));
-        } else {
-            setSelected([...selected, id]);
-        }
-    };
+    const title = useTitle({ address, stage, slingers });
 
     const handleMint = async () => {
         if (!address || !signer) {
@@ -412,7 +314,6 @@ export const Main: React.FC = () => {
                     break;
                 }
             }
-            // eslint-disable-next-line no-empty
         } catch (e) {
             const msg = (e as any)?.message || "txn failed. try again.";
 
@@ -420,12 +321,10 @@ export const Main: React.FC = () => {
                 toast.error("txn failed. insufficient funds");
             } else if (/exceeded/i.test(msg)) {
                 toast.error("txn failed. sold out");
-            } else if (/wallet already claimed/i.test(msg)) {
-                toast.error("txn failed. already claimed");
             } else if (/sale not started/i.test(msg)) {
                 toast.error("txn failed. sale not started");
             } else {
-                toast.error("txn failed. try again");
+                toast.error(msg);
             }
         }
     };
@@ -474,7 +373,7 @@ export const Main: React.FC = () => {
                                 selected,
                                 stage,
                                 slingers,
-                                handleSelectedSlinger,
+                                handleSelectSlinger,
                             }}
                         />
                         <FenceContainer
