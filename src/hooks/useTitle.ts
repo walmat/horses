@@ -48,7 +48,7 @@ export const useTitle = ({
             stage,
             (slingers || []).filter(({ used }) => !used).length,
         );
-    }, []);
+    }, [address, stage, slingers]);
 
     return title;
 };
