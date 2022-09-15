@@ -2,7 +2,7 @@ import { ethers, providers } from "ethers";
 
 const Provider = (): providers.JsonRpcProvider => {
     return new ethers.providers.InfuraProvider(
-        "rinkeby",
+        "mainnet",
         process.env.NEXT_PUBLIC_NODE_ADDRESS,
     );
 };

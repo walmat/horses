@@ -220,7 +220,7 @@ export const Main: React.FC = () => {
     const stage = useMintStage();
     const { address } = useAccount();
 
-    const slingers = useSlingers({ address });
+    const slingers = useSlingers({ address, stage });
     const { selected, handleSelectSlinger } = useSelected({ slingers });
 
     const { data: totalSupply } = useContractRead({

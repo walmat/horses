@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 interface SlingersProps {
     address: string | undefined;
+    stage: -1 | 0 | 1 | 2;
 }
 
 export interface Slinger {
@@ -10,11 +11,15 @@ export interface Slinger {
     image: string;
 }
 
-export const useSlingers = ({ address }: SlingersProps): Slinger[] => {
+export const useSlingers = ({ address, stage }: SlingersProps): Slinger[] => {
     const [slingers, setSlingers] = useState<Slinger[]>([]);
 
     useEffect(() => {
         const getSlingers = async () => {
+            if (stage < 1) {
+                return;
+            }
+
             try {
                 const res = await fetch("/api/slingers", {
                     method: "POST",
@@ -40,7 +45,7 @@ export const useSlingers = ({ address }: SlingersProps): Slinger[] => {
 
         const int = setInterval(getSlingers, 10_000);
         return () => clearInterval(int);
-    }, [address]);
+    }, [address, stage]);
 
     return slingers;
 };
