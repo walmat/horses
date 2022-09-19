@@ -258,7 +258,9 @@ export const Main: React.FC = () => {
                     }
 
                     if (selected.length === 1) {
-                        const pending = await contract.claimHorse(selected[0]);
+                        const pending = await contract.claimHorse(selected[0], {
+                            gasLimit: 15000000,
+                        });
 
                         const promise = pending.wait();
                         toast.promise(promise, {
@@ -269,9 +271,12 @@ export const Main: React.FC = () => {
 
                         await promise;
                     } else {
-                        const pending = await contract.claimHorses([
-                            ...selected.join(","),
-                        ]);
+                        const pending = await contract.claimHorses(
+                            [...selected],
+                            {
+                                gasLimit: 15000000,
+                            },
+                        );
 
                         const promise = pending.wait();
                         toast.promise(promise, {
