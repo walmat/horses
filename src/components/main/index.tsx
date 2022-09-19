@@ -272,7 +272,7 @@ export const Main: React.FC = () => {
                         const pending = await contract.claimHorses(
                             [...selected],
                             {
-                                gasLimit: 15000000,
+                                gasLimit: 1000000,
                             },
                         );
 
@@ -295,7 +295,7 @@ export const Main: React.FC = () => {
                         pending = await contract.claimHorse(selected[0]);
                     } else if (selected.length > 1) {
                         pending = await contract.claimHorses([...selected], {
-                            gasLimit: 15000000,
+                            gasLimit: 1000000,
                         });
                     } else {
                         pending = await contract.mintHorses(amount, {
