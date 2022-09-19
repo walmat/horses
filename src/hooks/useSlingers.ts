@@ -43,8 +43,8 @@ export const useSlingers = ({ address, stage }: SlingersProps): Slinger[] => {
 
         getSlingers();
 
-        const int = setInterval(getSlingers, 10_000);
-        return () => clearInterval(int);
+        // const int = setInterval(getSlingers, 30_000);
+        // return () => clearInterval(int);
     }, [address, stage]);
 
     return slingers;
