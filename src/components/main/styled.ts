@@ -155,7 +155,6 @@ export const SlingersContainer = styled.div`
     margin: 1rem auto;
     height: auto;
     justify-content: flex-start;
-    max-height: 10vh;
     overflow-y: auto;
     max-width: 100vw;
     padding: 0 2rem;
@@ -166,19 +165,13 @@ export const SlingersContainer = styled.div`
         display: none;
     }
 
-    @media (min-width: 480px) {
-        max-height: 12vh;
-    }
-
     @media (min-width: 600px) {
-        max-height: 15vh;
         margin: 0 auto;
         max-width: 48rem;
     }
 
     @media (min-width: 1085px) {
         margin: 0 auto;
-        max-height: 15vh;
         max-width: 60rem;
     }
 `;
