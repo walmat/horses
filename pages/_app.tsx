@@ -6,6 +6,7 @@ import { Toaster } from "react-hot-toast";
 
 import "@rainbow-me/rainbowkit/styles.css";
 
+import { alchemyProvider } from "@wagmi/core/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 import {
     getDefaultWallets,
@@ -18,8 +19,11 @@ import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import { useAccountChange } from "@hooks/useAccountChange";
 
 const { chains, provider } = configureChains(
-    [chain.mainnet, chain.rinkeby],
-    [publicProvider()],
+    [chain.mainnet],
+    [
+        publicProvider(),
+        alchemyProvider({ apiKey: process.env.ALCHEMY_API_KEY! }),
+    ],
 );
 
 const { connectors } = getDefaultWallets({

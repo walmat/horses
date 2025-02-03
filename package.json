@@ -25,7 +25,7 @@
         "recoil": "^0.1.2",
         "styled-components": "^5.2.1",
         "styled-system": "^5.1.5",
-        "wagmi": "^0.6.4",
+        "wagmi": "^0.8.0",
         "yarn": "^1.22.19"
     },
     "devDependencies": {

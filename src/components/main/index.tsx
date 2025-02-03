@@ -229,7 +229,9 @@ export const Main: React.FC = () => {
         watch: true,
     });
 
-    const totalMinted = useTotalMinted({ totalSupply });
+    const totalMinted = useTotalMinted({
+        totalSupply: totalSupply as ethers.utils.Result | undefined,
+    });
     const contract = useContract({
         ...horses,
         signerOrProvider: signer,
@@ -258,7 +260,7 @@ export const Main: React.FC = () => {
                     }
 
                     if (selected.length === 1) {
-                        const pending = await contract.claimHorse(selected[0]);
+                        const pending = await contract?.claimHorse(selected[0]);
 
                         const promise = pending.wait();
                         toast.promise(promise, {
@@ -269,7 +271,7 @@ export const Main: React.FC = () => {
 
                         await promise;
                     } else {
-                        const pending = await contract.claimHorses(
+                        const pending = await contract?.claimHorses(
                             [...selected],
                             {
                                 gasLimit: 1000000,
@@ -292,13 +294,13 @@ export const Main: React.FC = () => {
                     let pending: any;
 
                     if (selected.length === 1) {
-                        pending = await contract.claimHorse(selected[0]);
+                        pending = await contract?.claimHorse(selected[0]);
                     } else if (selected.length > 1) {
-                        pending = await contract.claimHorses([...selected], {
+                        pending = await contract?.claimHorses([...selected], {
                             gasLimit: 1000000,
                         });
                     } else {
-                        pending = await contract.mintHorses(amount, {
+                        pending = await contract?.mintHorses(amount, {
                             value: ethers.utils.parseEther(`${amount / 100}`),
                         });
                     }
